@@ -7,16 +7,19 @@ import argparse
 
 parser = argparse.ArgumentParser(description='Set the Chroma DB path to view collections')
 parser.add_argument('host', nargs='?', default='192.168.201.9')
+parser.add_argument('port', nargs='?', default=8010)
 parser.add_argument('db', nargs='?', default='default_database')
 
 pd.set_option('display.max_columns', 4)
 
-def view_collections(host, dir):
+def view_collections(host, port, dir):
     st.markdown("### DB Path: %s" % dir)
 
     # client = chromadb.PersistentClient(path=dir)
     client = chromadb.HttpClient(
         host=host,
+        port=port,
+        database=dir,
         settings=Settings(
             allow_reset=True
         )
@@ -44,8 +47,9 @@ if __name__ == "__main__":
     try:
         args = parser.parse_args()
         print("Host: %s" % args.host)
+        print("Port: %s" % args.port)
         print("Opening database: %s" % args.db)
-        view_collections(args.host, args.db)
+        view_collections(args.host, args.port, args.db)
     except:
         pass
 
